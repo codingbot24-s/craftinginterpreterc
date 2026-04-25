@@ -24,7 +24,14 @@ int constant_instruction(const char* name,Chunk* c, int offset)
 int disassembleInstruction(Chunk* c, int offset) 
 {
     printf("%04d ", offset);
-
+    if (offset  > 0 && c->line[offset] == c->line[offset - 1])
+    {
+        printf("   | ");
+    }else 
+    {
+        printf("%4d ", c->line[offset]);
+    }
+    
     uint8_t instruction = c->code[offset];
     switch (instruction)
     {
