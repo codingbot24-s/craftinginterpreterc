@@ -1,7 +1,7 @@
 
 #include <stdio.h>
 #include "debug.h"
-
+#include "value.h"
 
 
 int simpleInstruction(const char* name,int offset)
@@ -9,6 +9,17 @@ int simpleInstruction(const char* name,int offset)
     printf("%s\n", name);
     return offset + 1;
 } 
+
+int constant_instruction(const char* name,Chunk* c, int offset) 
+{
+    uint8_t c_index = c->code[offset + 1];
+    // no new line buffered
+    printf("%-16s %4d '", name, c_index);
+
+    print_value(c->constants.Values[c_index]);
+    printf("'\n");
+    return offset + 2;
+}
 
 int disassembleInstruction(Chunk* c, int offset) 
 {
@@ -19,6 +30,8 @@ int disassembleInstruction(Chunk* c, int offset)
     {
     case OP_RETURN:
         return simpleInstruction("OP_RETURN", offset);
+    case OP_CONSTANT:
+        return constant_instruction("OP_CONSTANT",c,offset);
     default:
         printf("Unknown opcode %d\n", instruction);
         return offset + 1;
