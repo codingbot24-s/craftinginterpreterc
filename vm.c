@@ -5,9 +5,14 @@
 
 VM vm; 
 
+static reset_stack()
+{
+    vm.stack_top = vm.stack;   
+}
+
 void init_vm()
 {
-    
+    reset_stack();    
 }
 
 void free_vm()
@@ -42,4 +47,13 @@ InterpretResult interpret(Chunk *c)
     vm.chunk = c;
     vm.ip = vm.chunk->code;
     run();
+}
+
+void push(Value value)
+{
+}
+
+Value pop()
+{
+    
 }
