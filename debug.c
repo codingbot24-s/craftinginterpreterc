@@ -37,6 +37,8 @@ int disassembleInstruction(Chunk* c, int offset)
     {
     case OP_RETURN:
         return simpleInstruction("OP_RETURN", offset);
+    case OP_NEGATE :
+        return simpleInstruction("OP_NEGATE",offset);
     case OP_CONSTANT:
         return constant_instruction("OP_CONSTANT",c,offset);
     default:

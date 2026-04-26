@@ -18,9 +18,11 @@ int main (int argc, char** argv)
     write_chunk(&c,OP_CONSTANT,123);
     write_chunk(&c,constant,123);
 
-
+    write_chunk(&c,OP_NEGATE,123);
+    
     write_chunk(&c,OP_RETURN,123);
     disassembleChunk(&c,"test chunk");
+    // interpret the chunk 
     interpret(&c);
     free_vm();
     free_chunk(&c); 
