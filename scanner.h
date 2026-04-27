@@ -65,7 +65,7 @@ typedef struct Token
 Token scan_token();
 void init_scanner(const char *source);
 
-Token make_token(TokenType tt);
+Token makeToken(TokenType tt);
 
 Token error_token(const char* message);
 

@@ -130,6 +130,28 @@ static void skip_whitespace()
     }
 } 
 
+/// TEST ME
+static Token string () 
+{
+    while (peek() != '"' &&  !is_at_end())
+    {
+        if (peek() == '\n')
+        {
+            scanner.line++;
+        }
+        
+        advance();
+    }
+ 
+    if (is_at_end())
+    {
+        return error_token("unterminated string. ");
+    }
+
+    advance();
+
+    return makeToken(TOKEN_STRING);
+}
 
 Token scan_token()
 {
@@ -178,6 +200,8 @@ Token scan_token()
     case '>':
         return makeToken(
             match('=') ? TOKEN_GREATER_EQUAL : TOKEN_GREATER);
+    case '"':
+        return string();
     default:
         printf("dont know what is this %c\n", c);
         break;
