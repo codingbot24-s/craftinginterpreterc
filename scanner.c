@@ -26,3 +26,14 @@ void init_scanner(const char *source)
     scanner.current = source;
     scanner.line = 1;
 }
+
+
+
+
+void error_token(const char *message)
+{
+}
+
+Token scan_token() 
+{   
+}
