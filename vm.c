@@ -3,7 +3,7 @@
 #include "common.h"
 #include "debug.h"
 #include <stdbool.h>
-
+#include "compiler.h"
 VM vm;
 
 void static reset_stack()
@@ -82,11 +82,10 @@ static InterpretResult run()
     }
 }
 
-InterpretResult interpret(Chunk *c)
-{
-    vm.chunk = c;
-    vm.ip = vm.chunk->code;
-    run();
+InterpretResult interpret(const char* source)
+{   
+    compile(source);
+    return INTERPRET_OK;
 }
 
 void push(Value value)
