@@ -10,19 +10,13 @@ int main (int argc, char** argv)
     init_chunk(&c);
 
 
-    int constant = add_constant(&c,2);
+    int constant = add_constant(&c,8);
     write_chunk(&c,OP_CONSTANT,123);
     write_chunk(&c,constant,123);
 
-    
-    int constant_t = add_constant(&c,2);
-    write_chunk(&c,OP_CONSTANT,123);
-    write_chunk(&c,constant_t,123);
+    write_chunk(&c,OP_DUP,123);
 
-
-    write_chunk(&c,OP_DIV,123);
-
-
+    write_chunk(&c,OP_ADD,123);
 
     write_chunk(&c,OP_RETURN,123);
    //disassembleChunk(&c,"test chunk");

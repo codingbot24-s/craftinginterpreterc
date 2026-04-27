@@ -70,6 +70,10 @@ static InterpretResult run()
         case OP_DIV:
             BINARY_OP(/);
             break;
+        case OP_DUP:
+            Value value = peek();
+            push(value);
+            break;
         case OP_RETURN:
             print_value(pop());
             printf("\n");
@@ -95,4 +99,9 @@ Value pop()
 {
     vm.stack_top--;
     return *vm.stack_top;
+}
+
+Value peek() 
+{
+    return vm.stack_top[-1];
 }

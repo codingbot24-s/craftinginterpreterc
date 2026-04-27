@@ -27,6 +27,6 @@ InterpretResult interpret(Chunk *c);
 
 void push(Value value);
 Value pop();
-
+Value peek();
 
 #endif // VM_H
