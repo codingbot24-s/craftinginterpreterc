@@ -10,18 +10,22 @@ int main (int argc, char** argv)
     init_chunk(&c);
 
 
-    /*
-        [ OPCODE, OPRAND ]
-    */
-    // write the constant 
-    int constant = add_constant(&c,1.2);
+    int constant = add_constant(&c,2);
     write_chunk(&c,OP_CONSTANT,123);
     write_chunk(&c,constant,123);
 
-    write_chunk(&c,OP_NEGATE,123);
     
+    int constant_t = add_constant(&c,2);
+    write_chunk(&c,OP_CONSTANT,123);
+    write_chunk(&c,constant_t,123);
+
+
+    write_chunk(&c,OP_DIV,123);
+
+
+
     write_chunk(&c,OP_RETURN,123);
-    disassembleChunk(&c,"test chunk");
+   //disassembleChunk(&c,"test chunk");
     // interpret the chunk 
     interpret(&c);
     free_vm();

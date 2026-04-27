@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include "common.h"
 #include "debug.h"
+#include <stdbool.h>
 
 VM vm;
 
@@ -23,6 +24,15 @@ static InterpretResult run()
 {
 #define READ_BYTE() (*vm.ip++)
 #define READ_CONSTANT() (vm.chunk->constants.Values[READ_BYTE()])
+
+#define BINARY_OP(op)     \
+    do                    \
+    {                     \
+        double b = pop(); \
+        double a = pop(); \
+        push(a op b);     \
+    } while (false);
+
     for (;;)
     {
 #ifdef DEBUG_TRACE_EXECUTION
@@ -45,8 +55,20 @@ static InterpretResult run()
             Value constant = READ_CONSTANT();
             push(constant);
             break;
-        case OP_NEGATE: 
+        case OP_NEGATE:
             push(-pop());
+            break;
+        case OP_ADD:
+            BINARY_OP(+);
+            break;
+        case OP_SUB:
+            BINARY_OP(-);
+            break;
+        case OP_MUL:
+            BINARY_OP(*);
+            break;
+        case OP_DIV:
+            BINARY_OP(/);
             break;
         case OP_RETURN:
             print_value(pop());
