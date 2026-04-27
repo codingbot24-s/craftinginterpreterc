@@ -78,9 +78,38 @@ static bool match(char expected)
 }
 
 
+static char peek() 
+{
+    return *scanner.current;   
+}
+
+
+static void skip_whitespace() 
+{
+    for(;;)
+    {
+        char c = peek();
+        switch (c)
+        {
+        case ' ':
+        case '\r':
+        case '\t':
+            advance();
+            break;
+        case '\n':
+            scanner.line++;
+            advance();
+            break;
+        default:
+            return;
+        }
+    }
+} 
+
 
 Token scan_token()
 {
+    skip_whitespace();
     scanner.start = scanner.current;
 
     if (is_at_end())
