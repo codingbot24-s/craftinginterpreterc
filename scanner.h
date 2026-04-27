@@ -55,6 +55,7 @@ typedef enum TokenType
 typedef struct Token
 {
     TokenType type;
+    // start of token means the actual token texxt;
     const char *start;
     int len;
     int line;
@@ -64,8 +65,9 @@ typedef struct Token
 Token scan_token();
 void init_scanner(const char *source);
 
+Token make_token(TokenType tt);
 
-void error_token(const char* message);
+Token error_token(const char* message);
 
 
 #endif // SCANNER_H

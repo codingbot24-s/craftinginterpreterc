@@ -2,6 +2,9 @@
 #include "scanner.h"
 #include <stdio.h>
 
+
+
+
 void compile(const char *source)
 {
     init_scanner(source);
@@ -13,15 +16,15 @@ void compile(const char *source)
 
         if (token.line != line)
         {
-            printf("%4d ", token.line);
+            // printf("%4d ", token.line);
             token.line = line;
         }
         else
         {
-            printf("    | ");
+            // printf("    | ");
         }
 
-        printf("%2d '%.*s'\n", token.type, token.len, token.start);
+        // printf("%2d '%.*s'\n", token.type, token.len, token.start);
 
         if (token.type == TOKEN_EOF)
         {
@@ -29,6 +32,4 @@ void compile(const char *source)
         }
         
     }
-
-    return error_token("Unexpected Token.  ");
 }
