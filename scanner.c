@@ -77,10 +77,9 @@ static bool match(char expected)
     return false;
 }
 
-
-static char peek() 
+static char peek()
 {
-    return *scanner.current;   
+    return *scanner.current;
 }
 
 static char peek_next()
@@ -92,10 +91,9 @@ static char peek_next()
     return scanner.current[1];
 }
 
-
-static void skip_whitespace() 
+static void skip_whitespace()
 {
-    for(;;)
+    for (;;)
     {
         char c = peek();
         switch (c)
@@ -116,33 +114,32 @@ static void skip_whitespace()
                 {
                     advance();
                 }
-                
-            }else
+            }
+            else
             {
                 return;
             }
 
-            
             break;
         default:
             return;
         }
     }
-} 
+}
 
 /// TEST ME
-static Token string () 
+static Token string()
 {
-    while (peek() != '"' &&  !is_at_end())
+    while (peek() != '"' && !is_at_end())
     {
         if (peek() == '\n')
         {
             scanner.line++;
         }
-        
+
         advance();
     }
- 
+
     if (is_at_end())
     {
         return error_token("unterminated string. ");
@@ -151,6 +148,60 @@ static Token string ()
     advance();
 
     return makeToken(TOKEN_STRING);
+}
+
+static bool is_digit(char c) 
+{
+    return c >= '0' && c <= '9';
+}
+
+static Token number() 
+{
+    while (is_digit(peek()) )
+    {
+        advance();
+    }
+    
+    if (peek() == '.' && is_digit(peek_next()) )
+    {
+        advance();
+
+        while (is_digit(peek()))
+        {
+            advance();
+        }
+        
+    }
+
+
+    return makeToken(TOKEN_NUMBER);
+}
+
+static bool is_alpha(char c) 
+{
+    return (c >= 'a' && c <= 'z') ||
+         (c >= 'A' && c <= 'Z') ||
+          c == '_';
+}
+
+
+
+// remaining From here
+static TokenType identifier_type() 
+{
+    return TOKEN_IDENTIFIER;
+}
+
+static Token identifier() 
+{
+    while (is_alpha(peek()) || is_digit(peek()))
+    {
+        advance();
+    }
+
+
+    return makeToken(identifier_type());
+    
 }
 
 Token scan_token()
@@ -164,9 +215,16 @@ Token scan_token()
     }
 
     char c = advance();
-
+    if(is_digit(c)) return number();
+    if (is_alpha(c))
+    {
+        return identifier();
+    }
+    
     switch (c)
     {
+    case '"':
+        return string();
     case '(':
         return makeToken(TOKEN_LEFT_PAREN);
     case ')':
@@ -200,8 +258,6 @@ Token scan_token()
     case '>':
         return makeToken(
             match('=') ? TOKEN_GREATER_EQUAL : TOKEN_GREATER);
-    case '"':
-        return string();
     default:
         printf("dont know what is this %c\n", c);
         break;
