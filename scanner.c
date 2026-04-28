@@ -170,7 +170,6 @@ static Token number()
             advance();
         }
     }
-
     return makeToken(TOKEN_NUMBER);
 }
 

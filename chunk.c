@@ -35,6 +35,8 @@ void free_chunk(Chunk* c)
     init_chunk(c);
 }
 
+
+// add_constant add the value in the value pool and return the index
 int add_constant(Chunk *c, Value constant)
 {
     write_valuearr(&c->constants,constant);

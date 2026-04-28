@@ -1,6 +1,8 @@
 #include "compiler.h"
 #include "scanner.h"
 #include <stdio.h>
+#include <stdlib.h>
+
 typedef struct Parser
 {
     Token current;
@@ -77,7 +79,7 @@ static void consume(TokenType tt, const char* message)
         return;
     }
  
-    erorr_at_curren(message);
+    erorr_at_current(message);
 }
 
 static void emit_byte(uint8_t byte)
@@ -104,6 +106,31 @@ static void end_compiler()
 }
 
 
+
+static uint8_t make_constant (Value value) 
+{
+    int c_index = add_constant(current_chunk(),value);
+    if (c_index > UINT8_MAX)
+    {
+        error("Too many constants in one chunk.");
+        return 0; 
+    }
+
+    return (uint8_t)c_index;
+}
+
+static void emit_constant (Value value) 
+{
+    emit_bytes(OP_CONSTANT,make_constant(value));
+}
+
+static void number( ) 
+{
+    Value value = strtod(parser.previous.start,NULL);
+    emit_constant(value);
+}
+
+
 static void expression ( ) 
 {
 
@@ -118,7 +145,7 @@ bool compile(const char *source, Chunk* c)
     compiling_chunk = c;
 
     advance();
-    expression();
+    // expression();
     consume(TOKEN_EOF,"Expect End of expression. ");
     end_compiler();
     return !parser.had_error;    
