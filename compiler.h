@@ -2,7 +2,10 @@
 
 #define COMPILER_H
 
+#include <stdbool.h>
+#include "vm.h"
 
-void compile(const char* source);
+
+bool compile(const char* source,Chunk* c);
 
 #endif //COMPILER_H

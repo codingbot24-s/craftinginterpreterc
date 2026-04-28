@@ -127,7 +127,6 @@ static void skip_whitespace()
     }
 }
 
-/// TEST ME
 static Token string()
 {
     while (peek() != '"' && !is_at_end())
@@ -150,19 +149,19 @@ static Token string()
     return makeToken(TOKEN_STRING);
 }
 
-static bool is_digit(char c) 
+static bool is_digit(char c)
 {
     return c >= '0' && c <= '9';
 }
 
-static Token number() 
+static Token number()
 {
-    while (is_digit(peek()) )
+    while (is_digit(peek()))
     {
         advance();
     }
-    
-    if (peek() == '.' && is_digit(peek_next()) )
+
+    if (peek() == '.' && is_digit(peek_next()))
     {
         advance();
 
@@ -170,38 +169,93 @@ static Token number()
         {
             advance();
         }
-        
     }
-
 
     return makeToken(TOKEN_NUMBER);
 }
 
-static bool is_alpha(char c) 
+static bool is_alpha(char c)
 {
     return (c >= 'a' && c <= 'z') ||
-         (c >= 'A' && c <= 'Z') ||
-          c == '_';
+           (c >= 'A' && c <= 'Z') ||
+           c == '_';
 }
 
-
-
-// remaining From here
-static TokenType identifier_type() 
+static TokenType checkKeyword(int start, int len, const char *rest, TokenType type)
 {
+    if (scanner.current - scanner.start == start + len &&
+        memcmp(scanner.start + start, rest, len) == 0)
+    {
+        return type;
+    }
+
     return TOKEN_IDENTIFIER;
 }
 
-static Token identifier() 
+static TokenType identifier_type()
+{
+    switch (scanner.start[0])
+    {
+    case 'a':
+        return checkKeyword(1, 2, "nd", TOKEN_AND);
+    case 'c':
+        return checkKeyword(1, 4, "lass", TOKEN_CLASS);
+    case 'e':
+        return checkKeyword(1, 3, "lse", TOKEN_ELSE);
+    case 'i':
+        return checkKeyword(1, 1, "f", TOKEN_IF);
+    case 'n':
+        return checkKeyword(1, 2, "il", TOKEN_NIL);
+    case 'o':
+        return checkKeyword(1, 1, "r", TOKEN_OR);
+    case 'p':
+        return checkKeyword(1, 4, "rint", TOKEN_PRINT);
+    case 'r':
+        return checkKeyword(1, 5, "eturn", TOKEN_RETURN);
+    case 's':
+        return checkKeyword(1, 4, "uper", TOKEN_SUPER);
+    case 'v':
+        return checkKeyword(1, 2, "ar", TOKEN_VAR);
+    case 'w':
+        return checkKeyword(1, 4, "hile", TOKEN_WHILE);
+    case 'f':
+        if (scanner.current - scanner.start > 1)
+        {
+            switch (scanner.start[1])
+            {
+            case 'a':
+                return checkKeyword(2, 3, "lse", TOKEN_FALSE);
+            case 'o':
+                return checkKeyword(2, 1, "r", TOKEN_FOR);
+            case 'u':
+                return checkKeyword(2, 1, "n", TOKEN_FUN);
+            }
+        }
+        break;
+    case 't':
+        if (scanner.current - scanner.start > 1)
+        {
+            switch (scanner.start[1])
+            {
+            case 'h':
+                return checkKeyword(2, 2, "is", TOKEN_THIS);
+            case 'r':
+                return checkKeyword(2, 2, "ue", TOKEN_TRUE);
+            }
+        }
+        break;
+    }
+    return TOKEN_IDENTIFIER;
+}
+
+static Token identifier()
 {
     while (is_alpha(peek()) || is_digit(peek()))
     {
         advance();
     }
 
-
     return makeToken(identifier_type());
-    
 }
 
 Token scan_token()
@@ -215,12 +269,13 @@ Token scan_token()
     }
 
     char c = advance();
-    if(is_digit(c)) return number();
+    if (is_digit(c))
+        return number();
     if (is_alpha(c))
     {
         return identifier();
     }
-    
+
     switch (c)
     {
     case '"':

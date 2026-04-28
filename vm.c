@@ -83,9 +83,23 @@ static InterpretResult run()
 }
 
 InterpretResult interpret(const char* source)
-{   
-    compile(source);
-    return INTERPRET_OK;
+{
+    Chunk c;
+    init_chunk(&c);
+
+    if (!compile(source,&c))
+    {
+        free_chunk(&c);
+        return INTERPRET_COMPILE_ERROR;
+    }
+
+
+    vm.chunk = &c;
+    vm.ip    = vm.chunk->code;
+
+    InterpretResult res = run();
+    free_chunk(&c);
+    return res;    
 }
 
 void push(Value value)
