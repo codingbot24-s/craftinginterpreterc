@@ -27,6 +27,6 @@ InterpretResult interpret(const char* source);
 
 void push(Value value);
 Value pop();
-Value peek();
+Value peek(int distance);
 
 #endif // VM_H

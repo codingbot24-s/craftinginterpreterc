@@ -1,6 +1,7 @@
 
 #include <stdio.h>
 #include "debug.h"
+#include "chunk.h"
 #include "value.h"
 
 int simpleInstruction(const char *name, int offset)
@@ -51,6 +52,13 @@ int disassembleInstruction(Chunk *c, int offset)
         return simpleInstruction("OP_DUP", offset);
     case OP_CONSTANT:
         return constant_instruction("OP_CONSTANT", c, offset);
+    case OP_FALSE:
+        return simpleInstruction("OP_FALSE", offset);
+     case OP_TRUE:
+         return simpleInstruction("OP_TRUE", offset);
+    case OP_NIL:
+        return simpleInstruction("OP_NIL", offset);
+
     default:
         printf("Unknown opcode %d\n", instruction);
         return offset + 1;

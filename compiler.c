@@ -316,7 +316,7 @@ bool compile(const char *source, Chunk *c)
     compiling_chunk = c;
 
     advance();
-    // expression();
+    expression();
     consume(TOKEN_EOF, "Expect End of expression. ");
     end_compiler();
     return !parser.had_error;

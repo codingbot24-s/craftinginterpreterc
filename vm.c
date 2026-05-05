@@ -92,7 +92,13 @@ static InterpretResult run()
             case OP_NIL:
                 push(NIL_VAL);
                 break;
-        case OP_CONSTANT:
+            case OP_TRUE:
+                push(BOOL_VAL(true));
+                break;
+                case OP_FALSE:
+                push(BOOL_VAL(false));
+                break;
+            case OP_CONSTANT:
             Value constant = READ_CONSTANT();
             push(constant);
             break;
@@ -124,7 +130,7 @@ static InterpretResult run()
         case OP_RETURN:
             print_value(pop());
             printf("\n");
-            return interprET_OK;
+            return INTERPRET_OK;
         }
     }
 }
