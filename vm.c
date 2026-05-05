@@ -25,6 +25,27 @@ void free_vm()
 {
 }
 
+bool values_equal(Value a, Value b)
+{
+    if (a.type != b.type)
+    {
+        return false;
+    }
+
+    switch (a.type)
+    {
+    case VAL_BOOL:
+        return AS_BOOL(a) == AS_BOOL(b);
+        break;
+    case VAL_NIL:
+        return true;
+    case VAL_NUMBER:
+        return AS_NUMBER(a) == AS_NUMBER(b);
+    default:
+        return false;
+    }
+}
+
 static void runtime_error(const char *format, ...)
 {
     va_list args;
@@ -39,37 +60,35 @@ static void runtime_error(const char *format, ...)
     reset_stack();
 }
 
+static bool is_falsely(Value value)
+{
+    return IS_NIL(value) || (IS_BOOL(value) && !AS_BOOL(value));
+}
+
 static InterpretResult run()
 {
 #define READ_BYTE() (*vm.ip++)
 #define READ_CONSTANT() (vm.chunk->constants.Values[READ_BYTE()])
 
+    /*
+
+        BINARY OPS MACRO
 
 
-/*
-
-    BINARY OPS MACRO 
-
-
-*/
+    */
 
 #define BINARY_OP(valueType, op)                        \
     do                                                  \
     {                                                   \
         if (!IS_NUMBER(peek(0)) || !IS_NUMBER(peek(1))) \
         {                                               \
-            runtime_error("Operands must be numbers.");  \
+            runtime_error("Operands must be numbers."); \
             return INTERPRET_RUNTIME_ERROR;             \
         }                                               \
         double b = AS_NUMBER(pop());                    \
         double a = AS_NUMBER(pop());                    \
         push(valueType(a op b));                        \
     } while (false)
-
-
-
-
-
 
     for (;;)
     {
@@ -87,18 +106,19 @@ static InterpretResult run()
 
 #endif
         uint8_t instruction;
-        switch (instruction = READ_BYTE()) {
+        switch (instruction = READ_BYTE())
+        {
 
-            case OP_NIL:
-                push(NIL_VAL);
-                break;
-            case OP_TRUE:
-                push(BOOL_VAL(true));
-                break;
-                case OP_FALSE:
-                push(BOOL_VAL(false));
-                break;
-            case OP_CONSTANT:
+        case OP_NIL:
+            push(NIL_VAL);
+            break;
+        case OP_TRUE:
+            push(BOOL_VAL(true));
+            break;
+        case OP_FALSE:
+            push(BOOL_VAL(false));
+            break;
+        case OP_CONSTANT:
             Value constant = READ_CONSTANT();
             push(constant);
             break;
@@ -122,15 +142,30 @@ static InterpretResult run()
         case OP_DIV:
             BINARY_OP(NUMBER_VAL, /);
             break;
-        // NOTE: implementation of peek has changed
-        // case OP_DUP:
-        //  Value value = peek();
-        // push(value);
-        // break;
+        case OP_NOT:
+            push(BOOL_VAL(is_falsely(pop())));
+            break;
+        case OP_EQUAL:
+            Value b = pop();
+            Value a = pop();
+            push(BOOL_VAL(values_equal(a, b)));
+            break;
+
+        case OP_GREATER:
+            BINARY_OP(BOOL_VAL,>);
+            break;
+        case OP_LESS:
+            BINARY_OP(BOOL_VAL,<);
+            break;    
         case OP_RETURN:
             print_value(pop());
             printf("\n");
             return INTERPRET_OK;
+            // NOTE: implementation of peek has changed
+            // case OP_DUP:
+            //  Value value = peek();
+            // push(value);
+            // break;
         }
     }
 }

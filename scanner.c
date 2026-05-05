@@ -66,14 +66,12 @@ static bool match(char expected)
     {
         return false;
     }
-
     if (*scanner.current == expected)
     {
         scanner.current++;
 
         return true;
     }
-
     return false;
 }
 
@@ -302,7 +300,7 @@ Token scan_token()
     case '*':
         return makeToken(TOKEN_STAR);
     case '!':
-        return makeToken(match('=') ? TOKEN_BANG_EQUAL : TOKEN_EQUAL);
+        return makeToken(match('=') ? TOKEN_BANG_EQUAL : TOKEN_BANG);
     case '=':
         return makeToken(
             match('=') ? TOKEN_EQUAL_EQUAL : TOKEN_EQUAL);
