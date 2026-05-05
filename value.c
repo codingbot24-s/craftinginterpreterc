@@ -33,6 +33,5 @@ void free_valuearr(ValueArray *varr)
 }
 
 void print_value(Value value) {
-  printf("%g", value);
+    printf("%g", AS_NUMBER(value));
 }
-

@@ -4,15 +4,18 @@
 #include <stdint.h>
 #include "value.h"
 
-// instructions 
+// instructions
 typedef enum {
-    OP_RETURN,
-    OP_CONSTANT,
-    OP_NEGATE,
-    OP_ADD,
-    OP_SUB,
-    OP_MUL,
-    OP_DIV,
+  OP_RETURN,
+  OP_CONSTANT,
+  OP_NEGATE,
+  OP_ADD,
+  OP_SUB,
+  OP_MUL,
+  OP_DIV,
+  OP_NIL,
+  OP_TRUE,
+  OP_FALSE,
     // TESTING
     OP_DUP,
 }OPCODE;
