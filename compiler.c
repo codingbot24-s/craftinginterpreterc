@@ -165,7 +165,6 @@ static void number()
 static void parse_precedence(Prescedence p)
 {
     advance();
-    printf("the current type is %d\n", parser.previous.type);
     Parsefn prefix_rule = get_rule(parser.previous.type)->prefix;
 
     if (prefix_rule == NULL)
@@ -332,7 +331,6 @@ bool compile(const char *source, Chunk *c)
     init_scanner(source);
 
     compiling_chunk = c;
-
     advance();
     expression();
     consume(TOKEN_EOF, "Expect End of expression. ");

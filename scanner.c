@@ -32,7 +32,6 @@ Token makeToken(TokenType tt)
     token.start = scanner.start;
     token.len = (int)(scanner.current - scanner.start);
     token.line = scanner.line;
-
     return token;
 }
 
@@ -259,7 +258,6 @@ Token scan_token()
 {
     skip_whitespace();
     scanner.start = scanner.current;
-
     if (is_at_end())
     {
         return makeToken(TOKEN_EOF);
