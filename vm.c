@@ -6,8 +6,12 @@
 #include "common.h"
 #include "debug.h"
 #include <stdbool.h>
+#include <string.h>
 #include "compiler.h"
+#include "object.h"
 #include "value.h"
+#include "memory.h"
+
 
 VM vm;
 
@@ -25,6 +29,8 @@ void free_vm()
 {
 }
 
+
+// this function is in value.c in book
 bool values_equal(Value a, Value b)
 {
     if (a.type != b.type)
@@ -41,6 +47,12 @@ bool values_equal(Value a, Value b)
         return true;
     case VAL_NUMBER:
         return AS_NUMBER(a) == AS_NUMBER(b);
+    case VAL_OBJ : {
+        obj_string* aString = AS_STRING(a);
+        obj_string* bString = AS_STRING(b);
+
+        return aString->len == bString->len && memcpy(aString->chars, bString->chars, aString->len) == 0;
+    }
     default:
         return false;
     }
@@ -64,6 +76,26 @@ static bool is_falsely(Value value)
 {
     return IS_NIL(value) || (IS_BOOL(value) && !AS_BOOL(value));
 }
+
+static void concatenate() 
+{
+    obj_string* stringb = AS_STRING(pop());    
+    obj_string* stringa = AS_STRING(pop());    
+
+
+    int len = stringa->len = stringb->len;
+    
+    char* chars = ALLOCATE(char,len + 1);
+    memcpy(chars,stringa->chars,stringa->len);
+     memcpy(chars + stringa->len,stringb->chars,stringb->len);
+   
+    chars[len] = '\0';
+    obj_string* result = take_string(chars,len);
+
+    push(OBJ_VAL(result));
+}
+
+
 
 static InterpretResult run()
 {
@@ -131,6 +163,12 @@ static InterpretResult run()
             push(NUMBER_VAL(-AS_NUMBER(pop())));
             break;
         case OP_ADD:
+            /// TODO: add number runtime error fix it     
+            if (IS_STRING(peek(0)) && IS_STRING(peek(1)))
+            { 
+                concatenate();        
+            }
+            // why binary op macro is not prsent here in book? 
             BINARY_OP(NUMBER_VAL, +);
             break;
         case OP_SUB:

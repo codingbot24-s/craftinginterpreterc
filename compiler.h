@@ -3,6 +3,7 @@
 #define COMPILER_H
 
 #include <stdbool.h>
+#include "object.h"
 #include "vm.h"
 
 

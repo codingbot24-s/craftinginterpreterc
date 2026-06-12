@@ -1,7 +1,6 @@
 #include "value.h"
-#include "stdlib.h"
 #include "memory.h"
-
+#include "object.h"
 #include <stdio.h>
 
 void init_valuearr(ValueArray* varr)
@@ -42,6 +41,9 @@ void print_value(Value value) {
             break;
         case VAL_NUMBER:
             printf("%g", AS_NUMBER(value));
+            break;
+        case VAL_OBJ : 
+            print_object(value);
             break;
     }
 }
