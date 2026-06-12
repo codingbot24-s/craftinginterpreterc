@@ -61,7 +61,7 @@ static bool is_at_end()
 
 static bool match(char expected)
 {
-    if (is_at_end)
+    if (is_at_end())
     {
         return false;
     }

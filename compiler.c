@@ -175,7 +175,7 @@ static void parse_precedence(Prescedence p)
 
     prefix_rule();
 
-    while (p < get_rule(parser.current.type)->p)
+    while (p <= get_rule(parser.current.type)->p)
     {
         advance();
 
@@ -183,6 +183,7 @@ static void parse_precedence(Prescedence p)
         infix_rule();
     }
 }
+
 
 static void expression()
 {
@@ -199,7 +200,7 @@ static void unary()
 {
     parse_precedence(PREC_UNARY);
     TokenType operator_type = parser.previous.type;
-    expression();
+    // expression();
 
     switch (operator_type)
     {
@@ -219,7 +220,6 @@ static void binary()
     TokenType operator_type = parser.previous.type;
     parse_rule *rule = get_rule(operator_type);
     parse_precedence((Prescedence)(rule->p + 1));
-
     switch (operator_type)
     {
     case TOKEN_PLUS:

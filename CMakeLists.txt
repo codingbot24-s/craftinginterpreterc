@@ -6,5 +6,5 @@ project(bytecodevm C)
 
 file(GLOB SOURCE "*.c")
 
-add_executable(bytecodevm ${SOURCE})
+add_executable(bytecodev ${SOURCE})
 
